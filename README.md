@@ -4,11 +4,11 @@ A secure, user-friendly command-line utility for connecting to SEASnet servers o
 
 ## Features
 
-- 🔐 **Secure Credential Storage**: Uses macOS Keychain to store passwords securely
-- 🎯 **Interactive Menu**: Simple, user-friendly interface
-- 🚀 **Quick Setup**: One-time credential configuration
-- 🔄 **Easy Updates**: Update credentials anytime
-- 💻 **Terminal Integration**: Works seamlessly from any terminal
+- **Secure Credential Storage**: Uses macOS Keychain to store passwords securely
+- **Interactive Menu**: Simple, user-friendly interface
+- **Quick Setup**: One-time credential configuration
+- **Easy Updates**: Update credentials anytime
+- **Terminal Integration**: Works seamlessly from any terminal
 
 ## Requirements
 
