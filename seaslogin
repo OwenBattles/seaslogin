@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# --- Configuration ---
+# A unique name for the Keychain service to identify our stored password
+SERVICE_NAME="seasnet-login-script"
+# The config file where the email/username will be stored
+CONFIG_FILE="$HOME/.seaslogin_config"
+
+
+# --- Function to Set/Update Credentials ---
+set_credentials() {
+  echo "--- Set/Update SEASnet Credentials ---"
+  read -p "Enter your SEASnet email/username: " email
+
+  # Prompt for the password securely (the -s flag hides the input)
+  read -sp "Enter the password for ${email}: " password
+  echo "" # Print a newline after the hidden input
+
+  # Store the email in the plain-text config file
+  echo "export SEAS_EMAIL='${email}'" > "${CONFIG_FILE}"
+
+  # Securely add or update the password in the macOS Keychain
+  security add-generic-password -a "${email}" -s "${SERVICE_NAME}" -w "${password}" -U
+
+  echo "Credentials have been securely stored."
+}
+
+
+# --- Function to Log In ---
+login() {
+  echo "--- Login to SEASnet ---"
+  # Check if the config file exists first
+  if [ ! -f "${CONFIG_FILE}" ]; then
+    echo "Error: Credentials not set. Please use option 1 first."
+    return
+  fi
+
+  # Load the email address from our config file
+  source "${CONFIG_FILE}"
+
+  echo "Attempting to log in as ${SEAS_EMAIL}..."
+
+  # Retrieve the password securely from the Keychain
+  PASSWORD=$(security find-generic-password -a "${SEAS_EMAIL}" -s "${SERVICE_NAME}" -w)
+
+  # Check if the password was found
+  if [ -z "$PASSWORD" ]; then
+    echo "Error: Password not found in Keychain for this user."
+    echo "Please use option 1 to set your credentials."
+    return
+  fi
+
+  # Use the retrieved credentials to log in
+  sshpass -p "$PASSWORD" ssh "$SEAS_EMAIL"
+}
+
+
+# --- Main Menu Loop ---
+while true
+do
+  echo ""
+  echo "SEASnet Login Utility"
+  echo "---------------------"
+  echo "1) Set/Update Credentials"
+  echo "2) Login to SEASnet"
+  echo "3) Exit"
+  echo "---------------------"
+
+  read -p "Enter your choice [1-3]: " choice
+
+  case "$choice" in
+    1)
+      set_credentials
+      ;;
+    2)
+      login
+      ;;
+    3)
+      echo "Exiting."
+      break
+      ;;
+    *)
+      echo "Invalid option. Please try again."
+      ;;
+  esac
+done
