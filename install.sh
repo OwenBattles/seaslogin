@@ -5,18 +5,18 @@
 
 set -e
 
-echo "🔧 Installing SEASnet Login Utility..."
+echo "Installing SEASnet Login Utility..."
 
 # Check if running on macOS
 if [[ "$OSTYPE" != "darwin"* ]]; then
-    echo "❌ Error: This utility is designed for macOS only."
+    echo "Error: This utility is designed for macOS only."
     echo "   The script uses macOS Keychain for secure password storage."
     exit 1
 fi
 
 # Check if sshpass is installed
 if ! command -v sshpass &> /dev/null; then
-    echo "⚠️  Warning: sshpass is not installed."
+    echo "Warning: sshpass is not installed."
     echo "   You can install it using Homebrew: brew install hudochenkov/sshpass/sshpass"
     echo "   Or using MacPorts: sudo port install sshpass"
     echo ""
@@ -34,7 +34,7 @@ SEASLOGIN_SCRIPT="$SCRIPT_DIR/seaslogin"
 
 # Check if seaslogin script exists
 if [[ ! -f "$SEASLOGIN_SCRIPT" ]]; then
-    echo "❌ Error: seaslogin script not found in $SCRIPT_DIR"
+    echo "Error: seaslogin script not found in $SCRIPT_DIR"
     exit 1
 fi
 
@@ -45,13 +45,13 @@ chmod +x "$SEASLOGIN_SCRIPT"
 sudo mkdir -p /usr/local/bin
 
 # Copy the script to /usr/local/bin
-echo "📦 Copying seaslogin to /usr/local/bin..."
+echo "Copying seaslogin to /usr/local/bin..."
 sudo cp "$SEASLOGIN_SCRIPT" /usr/local/bin/
 
 # Make sure it's executable in the new location
 sudo chmod +x /usr/local/bin/seaslogin
 
-echo "✅ Installation complete!"
+echo "Installation complete!"
 echo ""
 echo "You can now use 'seaslogin' from anywhere in your terminal."
 echo ""
